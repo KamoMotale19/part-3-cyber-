@@ -1,0 +1,151 @@
+﻿<Window x:Class="Cyber.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SECUREX - Cybersecurity Awareness Chatbot"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <!-- Sidebar button style -->
+        <Style x:Key="SidebarButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2A2A4A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#00B4D8"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- General button style -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#00B4D8"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="12,8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#0096C7"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0077A3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Main Grid: Sidebar + Content -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" MinWidth="180"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ============ SIDEBAR ============ -->
+        <Border Grid.Column="0" Background="#1A1A2E" Padding="20">
+            <StackPanel>
+                <!-- Logo -->
+                <TextBlock Text="🔐 SECUREX" FontSize="28" FontWeight="Bold" Foreground="Cyan" Margin="0,0,0,30"/>
+                <TextBlock Text="Cybersecurity Bot" FontSize="12" Foreground="Gray" Margin="0,-20,0,30"/>
+
+                <!-- Quick Action Buttons -->
+                <Button Content="  Tasks" Style="{StaticResource SidebarButton}" Click="BtnTasks_Click"/>
+                <Button Content=" Quiz" Style="{StaticResource SidebarButton}" Click="BtnQuiz_Click"/>
+                <Button Content=" Activity Log" Style="{StaticResource SidebarButton}" Click="BtnLog_Click"/>
+                <Button Content="  Help" Style="{StaticResource SidebarButton}" Click="BtnHelp_Click"/>
+
+                <Separator Margin="0,20,0,20" Background="#444"/>
+
+                <!-- Status Panel -->
+                <TextBlock Text="STATUS" Foreground="Gray" FontSize="11" FontWeight="Bold" Margin="0,0,0,10"/>
+                <TextBlock x:Name="lblUserName" Text="User: You" Foreground="White" Margin="0,3,0,0"/>
+                <TextBlock x:Name="lblInterest" Text="Interest: None" Foreground="White" Margin="0,3,0,0"/>
+                <TextBlock x:Name="lblTaskCount" Text="Tasks: 0" Foreground="White" Margin="0,3,0,0"/>
+                <TextBlock x:Name="lblQuizProgress" Text="Quiz: Not started" Foreground="White" Margin="0,3,0,0"/>
+                <TextBlock x:Name="lblSentiment" Text="Sentiment: Neutral" Foreground="White" Margin="0,3,0,0"/>
+                <TextBlock x:Name="lblMessageCount" Text="Messages: 0" Foreground="White" Margin="0,3,0,0"/>
+
+                <Button Content="  Clear Chat" Click="BtnClear_Click" 
+                        Style="{StaticResource ActionButton}" 
+                        Background="#D32F2F" Margin="0,30,0,0" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ============ MAIN CONTENT ============ -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Chat Display -->
+            <Border Margin="15,15,15,5" CornerRadius="12" Background="#1E1E2E">
+                <RichTextBox x:Name="rtbChatDisplay"
+                             IsReadOnly="True"
+                             Background="Transparent"
+                             Foreground="White"
+                             BorderThickness="0"
+                             VerticalScrollBarVisibility="Auto"
+                             FontSize="14"
+                             Padding="15"/>
+            </Border>
+
+            <!-- Input Area -->
+            <Border Grid.Row="1" Margin="15,5,15,15" Padding="10" CornerRadius="12" Background="#2A2A3E">
+                <DockPanel LastChildFill="True">
+                    <!-- Send Button -->
+                    <Button Content="➤ Send" Click="BtnSend_Click" 
+                            Style="{StaticResource ActionButton}"
+                            DockPanel.Dock="Right" Margin="10,0,0,0"
+                            Width="90"/>
+
+                    <!-- Voice Toggle -->
+                    <Button x:Name="btnVoice" Content=" Voice ON" Click="BtnVoice_Click"
+                            Style="{StaticResource ActionButton}"
+                            Background="#4CAF50" DockPanel.Dock="Right" Margin="0,0,10,0"
+                            Width="100"/>
+
+                    <!-- Text Input -->
+                    <TextBox x:Name="txtUserInput"
+                             Height="40"
+                             VerticalContentAlignment="Center"
+                             Background="Transparent"
+                             Foreground="White"
+                             BorderThickness="0"
+                             FontSize="14"
+                             KeyDown="TxtUserInput_KeyDown"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
